@@ -87,14 +87,28 @@ cuarteto x y z w = (.-.) ((///) x y) ((///) z w)
 
 -- un cuarteto donde se repite la imagen, rotada (¡No confundir con encimar4!)
 ciclar :: Dibujo a -> Dibujo a
-ciclar = undefined
+ciclar = cuarteto fig (rotar fig) (r180 fig) (r270 fig) -- Imprimo 4 figuras y despues roto cada figura segun el angulo
 
 -- map para nuestro lenguaje
 mapDib :: (a -> b) -> Dibujo a -> Dibujo b
-mapDib = undefined
+mapDib f Vacio = Vacio
+mapDib f (Figura dib) = f dib
+mapDib f (Rotar dib) = Rotar (mapDib f dib)
+mapDib f (Espejar dib) = Espejar (mapDib f dib)
+mapDib f (Rot45 dib) = Rot45 (mapDib f dib)
+mapDib f (Apilar num1 num2 dib1 dib2) = Apilar num1 num2 (mapDib f dib1) (mapDib f dib2)
+mapDib f (Juntar num1 num2 dib1 dib2) = Juntar num1 num2 (mapDib f dib1) (mapDib f dib2)
+mapDib f (Encimar dib1 dib2) = Encimar (mapDib f dib1) (mapDib f dib2)
 -- verificar que las operaciones satisfagan
 -- 1. map figura = id
 -- 2. map (g . f) = mapDib g . mapDib f
+-- nuestro lenguaje 
+-- data Dibujo a = Vacio | Figura a | Rotar (Dibujo a) 
+--               | Espejar (Dibujo a) | Rot45 (Dibujo a) 
+--               | Apilar Float Float (Dibujo a) (Dibujo a)
+--               | Juntar Float Float (Dibujo a) (Dibujo a)
+--               | Encimar (Dibujo a) (Dibujo a)
+--               deriving(Eq,Show)
 
 -- Cambiar todas las básicas de acuerdo a la función.
 change :: (a -> Dibujo b) -> Dibujo a -> Dibujo b

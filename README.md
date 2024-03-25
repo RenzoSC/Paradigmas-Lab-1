@@ -1,6 +1,6 @@
 ---
 title: Laboratorio de Funcional
-author: acá van sus nombres
+author: Renzo Condormango, Simón Celoria, Francisco Jose Porcel de Peralta
 ---
 La consigna del laboratorio está en https://tinyurl.com/funcional-2024-famaf
 
