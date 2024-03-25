@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Eta reduce" #-}
 module Interp
   ( interp,
     initial,
@@ -6,7 +8,8 @@ where
 
 import Dibujo
 import FloatingPic
-import Graphics.Gloss (Display (InWindow), color, display, makeColorI, pictures, translate, white, Picture)
+import Graphics.Gloss.Data.Vector
+import Graphics.Gloss (Display (InWindow), color, display, makeColorI, pictures, translate, white, Picture (Pictures))
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 -- Dada una computación que construye una configuración, mostramos por
@@ -22,27 +25,38 @@ initial (Conf n dib intBas) size = display win white $ withGrid fig size
     withGrid p x = translate desp desp $ pictures [p, color grey $ grid (ceiling $ size / 10) (0, 0) x 10]
     grey = makeColorI 100 100 100 100
 
+sumdiv2 :: Vector -> Vector -> Vector
+sumdiv2 x y = 0.5 V.*(x V.+ y)
+
+restdiv2 :: Vector -> Vector -> Vector
+restdiv2 x y = 0.5 V.*(x V.- y)
+
 -- Interpretación de (^^^)
 ov :: Picture -> Picture -> Picture
-ov p q = undefined
+ov p q = pictures [p,q]
 
 r45 :: FloatingPic -> FloatingPic
-r45 = undefined
+r45  fp x y z= fp (x V.+ sumdiv2 y z) (sumdiv2 y z) (restdiv2 z y)
 
 rot :: FloatingPic -> FloatingPic
-rot = undefined
+rot fp d w h= fp (d V.+ w) h ( V.negate w)
 
 esp :: FloatingPic -> FloatingPic
-esp = undefined
+esp fp d w h = fp (d V.+ w) (V.negate w) h
 
 sup :: FloatingPic -> FloatingPic -> FloatingPic
-sup = undefined
+sup fp gp d w h= pictures [fp d w h, gp d w h] 
 
 jun :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
-jun = undefined
+jun m n fp gp d w h = pictures [fp d w' h , gp (d V.+ w') (r' V.* w) h]
+                    where w' = m/(m+n) V* w
+                          r' = n/(m+n)
 
 api :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
-api = undefined
+api m n fp gp d w h = pictures[fp d+h' w (r V* h), gp d w h']
+                    where r = m/(m+n)
+                          r' = n/(m+n)
+                          h' = r' V* h
 
 interp :: Output a -> Output (Dibujo a)
 interp b = undefined
