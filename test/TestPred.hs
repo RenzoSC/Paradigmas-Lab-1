@@ -5,5 +5,7 @@ import Pred (falla)
 
 main :: IO ()
 main = do
-    putStrLn "Test suite not yet implemented."
-    when falla exitFailure
+    let x = V.fromList [1, 2, 3]
+        y = V.fromList [4, 5, 6]
+        result = sumdiv2 x y
+    print result

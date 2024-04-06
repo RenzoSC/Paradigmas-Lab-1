@@ -25,11 +25,32 @@ initial (Conf n dib intBas) size = display win white $ withGrid fig size
     withGrid p x = translate desp desp $ pictures [p, color grey $ grid (ceiling $ size / 10) (0, 0) x 10]
     grey = makeColorI 100 100 100 100
 
+cero :: Vector  
+cero = (0,0)
+
+mitad :: Vector -> Vector
+mitad = (0.5 V.*)
+
+raiz :: Vector -> Vector
+raiz = (sqrt (3/2) V.*)
+
+isoseles :: FloatingPic
+isoseles x y z = line $ map (x V.+) [cero, raiz (raiz y), half (y V.+ z), cero]
+
+rectangulo :: FloatingPic
+rectangulo x y z = line $ map (x V.+) [cero, y, y V.+ z, z, cero]
+
+-- Esta la copie de un lab, quiero entenderla y ver si se puede hacer de otra forma
+grilla :: Int -> Vector -> Float -> Float -> Picture
+grilla n v sep l = pictures [ls, translate 0 (l * toEnum n) (rotate 90 ls)]
+  where
+    ls = pictures $ take (n+1) $ hlines v sep l
+
 sumdiv2 :: Vector -> Vector -> Vector
-sumdiv2 x y = 0.5 V.*(x V.+ y)
+sumdiv2 x y = mitad(x V.+ y)
 
 restdiv2 :: Vector -> Vector -> Vector
-restdiv2 x y = 0.5 V.*(x V.- y)
+restdiv2 x y = mitad(x V.- y)
 
 -- Interpretación de (^^^)
 ov :: Picture -> Picture -> Picture
@@ -59,4 +80,4 @@ api m n fp gp d w h = pictures[fp d+h' w (r V* h), gp d w h']
                           h' = r' V* h
 
 interp :: Output a -> Output (Dibujo a)
-interp b = undefined
+interp funcBase = foldDib funcBase ov r45 rot esp jun api sup

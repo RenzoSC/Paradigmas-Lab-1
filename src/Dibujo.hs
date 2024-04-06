@@ -113,7 +113,14 @@ mapDib f (Encimar dib1 dib2) = Encimar (mapDib f dib1) (mapDib f dib2)
 -- Cambiar todas las básicas de acuerdo a la función.
 change :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
 change _ Vacio = Vacio
-change f (Figura dib) =
+change f (Figura dib) = f dib
+change f (Rotar dib) = Rotar (change f dib)
+change f (Espejar dib) = Espejar (change f dib)
+change f (Rot45 dib) = Rot45 (change f dib)
+change f (Apilar num1 num2 dib1 dib2) = Apilar num1 num2 (change f dib1) (change f dib2)
+change f (Juntar num1 num2 dib1 dib2) = Juntar num1 num2 (change f dib1) (change f dib2)
+change f (Encimar dib1 dib2) = Encimar (change f dib1) (change f dib2)
+
 
 -- Principio de recursión para Dibujos.
 foldDib ::
