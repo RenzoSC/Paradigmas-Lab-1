@@ -16,7 +16,7 @@ import Data.Monoid (Ap(Ap))
 
 
 -- nuestro lenguaje 
-data Dibujo a = Vacio | Figura a | Rotar (Dibujo a) 
+data Dibujo a = Figura a | Rotar (Dibujo a) 
               | Espejar (Dibujo a) | Rot45 (Dibujo a) 
               | Apilar Float Float (Dibujo a) (Dibujo a)
               | Juntar Float Float (Dibujo a) (Dibujo a)
@@ -91,7 +91,6 @@ ciclar fig = cuarteto fig (rotar fig) (r180 fig) (r270 fig) -- Imprimo 4 figuras
 
 -- map para nuestro lenguaje
 mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
-mapDib _ Vacio = Vacio
 mapDib f (Figura dib) = f dib
 mapDib f (Rotar dib) = Rotar (mapDib f dib)
 mapDib f (Espejar dib) = Espejar (mapDib f dib)
@@ -112,7 +111,6 @@ mapDib f (Encimar dib1 dib2) = Encimar (mapDib f dib1) (mapDib f dib2)
 
 -- Cambiar todas las básicas de acuerdo a la función.
 change :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
-change _ Vacio = Vacio
 change f (Figura dib) = f dib
 change f (Rotar dib) = Rotar (change f dib)
 change f (Espejar dib) = Espejar (change f dib)
@@ -133,15 +131,15 @@ foldDib ::
   (b -> b -> b) ->
   Dibujo a ->
   b
-foldDib fFigura fRotar fEsp fRotar45 fApi fjun fEnc (Figura a) = fFigura a
+foldDib fFigura _ _ _ _ _ _ (Figura a) = fFigura a
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Rotar a) = fRotar (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc a)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Espejar a) = fEsp (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc a)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Rot45 a) = fRotar (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc a)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Apilar x y dib1 dib2) = fApi x y (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
                                                                                       (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)
-foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Juntar x y dib1 dib2) = fJuntar x y (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
+foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Juntar x y dib1 dib2) = fJun x y (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
                                                                                          (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)
-foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Encimar dib1 dib2) = fEncimar (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
+foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Encimar dib1 dib2) = fEnc (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
                                                                                    (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)                                                                            
 
 
