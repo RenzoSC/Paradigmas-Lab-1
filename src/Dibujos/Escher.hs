@@ -1,4 +1,5 @@
-module Dibujos.Escher where
+module Dibujos.Escher 
+where
 
 -- Supongamos que eligen.
 type Escher = Bool

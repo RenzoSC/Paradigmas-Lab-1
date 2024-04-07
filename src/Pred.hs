@@ -2,7 +2,7 @@ module Pred (
   Pred,
   cambiar, anyDib, allDib, orP, andP, falla
 ) where
-import Dibujo (Dibujo, change, mapDib, figura, foldDib)
+import Dibujo (Dibujo, mapDib, figura, foldDib)
 
 type Pred a = a -> Bool
 

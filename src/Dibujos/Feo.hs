@@ -1,4 +1,5 @@
-module Dibujos.Feo where
+module Dibujos.Feo 
+where
 
 import Dibujo (Dibujo, figura, juntar, apilar, rot45, rotar, encimar, espejar)
 import FloatingPic(Conf(..), Output, half, zero)

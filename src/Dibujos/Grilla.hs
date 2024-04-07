@@ -1,6 +1,6 @@
 module Dibujos.Grilla (
-    grilla
-) where
+    grilla,
+)where
 
 import Dibujo (Dibujo, juntar, apilar)
 

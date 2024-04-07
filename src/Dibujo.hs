@@ -10,9 +10,9 @@ module Dibujo (Dibujo,
   ciclar, mapDib,
   change, foldDib,
     -- agregar las funciones constructoras
-    ) where
+  ) where
       
-import Data.Monoid (Ap(Ap))
+--import Data.Monoid (Ap(Ap))
 
 
 -- nuestro lenguaje 
