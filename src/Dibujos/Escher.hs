@@ -81,7 +81,7 @@ grilla = column . map row
 
 testAll :: Dibujo Basica
 testAll = grilla [
-    [apilados Trianguloxd] [apilados Triangulo] [apilados Triangulo] [apilados Triangulo]
+    [apilados Triangulo] [apilados Triangulo] [apilados Triangulo] [apilados Triangulo]
     ]
 
 

@@ -136,7 +136,7 @@ foldDib ::
 foldDib fFigura _ _ _ _ _ _ (Figura a) = fFigura a
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Rotar a) = fRotar (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc a)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Espejar a) = fEsp (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc a)
-foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Rot45 a) = fRotar (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc a)
+foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Rot45 a) = fRotar45 (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc a)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Apilar x y dib1 dib2) = fApi x y (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
                                                                                       (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Juntar x y dib1 dib2) = fJun x y (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
