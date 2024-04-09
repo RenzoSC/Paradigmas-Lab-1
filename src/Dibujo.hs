@@ -89,11 +89,9 @@ cuarteto x y z w = (.-.) ((///) x y) ((///) z w)
 ciclar :: Dibujo a -> Dibujo a
 ciclar fig = cuarteto fig (rotar fig) (r180 fig) (r270 fig) -- Imprimo 4 figuras y despues roto cada figura segun el angulo
 
--- map para nuestro lenguaje (Modificar Cambiar en Pred.hs ) 
---mapDib :: (a ->  b) -> Dibujo a -> Dibujo b MILANESA
---mapDib f (Figura dib) = Figura (f dib)
-mapDib :: (a ->  Dibujo b) -> Dibujo a -> Dibujo b
-mapDib f (Figura dib) = f dib
+--mapDib :: (a ->  b) -> Dibujo a -> Dibujo b
+mapDib :: (a -> b) -> Dibujo a -> Dibujo b
+mapDib f (Figura dib) = Figura (f dib)
 mapDib f (Rotar dib) = Rotar (mapDib f dib)
 mapDib f (Espejar dib) = Espejar (mapDib f dib)
 mapDib f (Rot45 dib) = Rot45 (mapDib f dib)
@@ -104,7 +102,7 @@ mapDib f (Encimar dib1 dib2) = Encimar (mapDib f dib1) (mapDib f dib2)
 -- 1. map figura = id
 -- 2. map (g . f) = mapDib g . mapDib f
 -- nuestro lenguaje 
--- data Dibujo a = Vacio | Figura a | Rotar (Dibujo a) 
+-- data Dibujo a = Figura a | Rotar (Dibujo a) 
 --               | Espejar (Dibujo a) | Rot45 (Dibujo a) 
 --               | Apilar Float Float (Dibujo a) (Dibujo a)
 --               | Juntar Float Float (Dibujo a) (Dibujo a)
