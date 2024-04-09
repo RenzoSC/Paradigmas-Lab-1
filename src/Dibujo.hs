@@ -89,8 +89,10 @@ cuarteto x y z w = (.-.) ((///) x y) ((///) z w)
 ciclar :: Dibujo a -> Dibujo a
 ciclar fig = cuarteto fig (rotar fig) (r180 fig) (r270 fig) -- Imprimo 4 figuras y despues roto cada figura segun el angulo
 
--- map para nuestro lenguaje
-mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
+-- map para nuestro lenguaje (Modificar Cambiar en Pred.hs ) 
+--mapDib :: (a ->  b) -> Dibujo a -> Dibujo b MILANESA
+--mapDib f (Figura dib) = Figura (f dib)
+mapDib :: (a ->  Dibujo b) -> Dibujo a -> Dibujo b
 mapDib f (Figura dib) = f dib
 mapDib f (Rotar dib) = Rotar (mapDib f dib)
 mapDib f (Espejar dib) = Espejar (mapDib f dib)
@@ -138,8 +140,8 @@ foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Rot45 a) = fRotar (foldDib 
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Apilar x y dib1 dib2) = fApi x y (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
                                                                                       (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Juntar x y dib1 dib2) = fJun x y (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
-                                                                                         (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)
+                                                                                      (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)
 foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc (Encimar dib1 dib2) = fEnc (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib1)
-                                                                                   (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)                                                                            
+                                                                               (foldDib fFigura fRotar fEsp fRotar45 fApi fJun fEnc dib2)                                                                            
 
 
