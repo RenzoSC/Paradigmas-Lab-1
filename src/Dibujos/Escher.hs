@@ -3,11 +3,75 @@ module Dibujos.Escher (
     escherConf
 )where
 
-import Dibujo (Dibujo, figura, juntar, apilar, rot45, rotar, encimar, espejar, comp)
-import FloatingPic(Conf(..), Output, half, zero)
+import Dibujo (Dibujo, figura, juntar, apilar, rotar, encimar, espejar, comp)
+import FloatingPic(Conf(..), Output, half)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
-import Graphics.Gloss ( Picture, blue, red, color, line, pictures, blank, green, violet )
+import Graphics.Gloss ( Picture, blue, color, line, pictures, violet )
 
+{-
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+ -- -- -- Implementacion Modularizada -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- Seguramente van cosas antes de esto, como en el caso no modularizado --
+
+-- no se que hacer con el bool
+type Escher = Bool
+
+-- Ni idea
+-- Dibujo T de escher
+dibujoT :: Dibujo Escher -> Dibujo Escher
+dibujoT t = undefined
+
+-- Ni idea
+-- Dibujo U de escher
+dibujoU :: Dibujo Escher -> Dibujo Escher
+dibujoU u = undefined
+
+-- Ni idea
+-- Esquina con nivel de detalle en base a la figura P.
+esquina :: Int -> Dibujo Escher -> Dibujo Escher
+esquina n p = undefined
+
+-- Ni idea
+-- Lado con nivel de detalle en base a la figura S.
+lado :: Int -> Dibujo Escher -> Dibujo Escher
+lado n s = undefined
+
+-- Este diria que es asi
+-- Ensabla el noneto (La estructura 3x3 de Escher)
+-- Por suerte no tenemos que poner el tipo! (No se por que)
+noneto p q r s t u v w x = apilar 1 2 (juntar 1 2 p (juntar 1 1 q r))
+                                      (apilar 1 1 (juntar 1 2 s (juntar 1 1 t u))
+                                                  (juntar 1 2 v (juntar 1 1 w x)))
+
+-- Este diria que es asi (Falta el T, no se con que se haria)
+-- El dibujo de Escher:
+escher :: Int -> Escher -> Dibujo Escher
+escher n e= noneto (esquina n)
+                   (lado n)
+                   (r270(esquina n))
+                   (rotar (lado n))
+                   (dibujoT (???????))
+                   (r270 (lado n))
+                   (rotar (esquina n))
+                   (r180 (lado n))
+                   (r180 (esquina n))
+
+-- Este diria que es asi
+testAll :: Dibujo Escher
+testAll = escher
+
+-- Este diria que es asi (aunque aun no hay definido un interpBas aca)
+escherConf :: Conf
+escherConf = Conf {
+    name = "Escher",
+    pic = testAll,
+    bas = interpBas
+}
+-}
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+ -- -- -- Implementacion No Modularizada -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 -- Les ponemos colorcitos para que no sea _tan_ feo
 data Color = Azul | Violeta
     deriving (Show, Eq)
@@ -44,40 +108,6 @@ figAzul b = figura (b, Azul)
 figCuadro :: BasicaSinColor -> Dibujo Escher
 figCuadro a = encimar (figVioleta Rectangulo) (figAzul a)
 
--- -- -- Para que sera esto ????? -- -- --
-
--- Para que sera esto ?????
--- -- Supongamos que eligen.
--- type Escher = Bool
-
--- Para que sera esto ?????
--- -- El dibujo P. (De P sale R V X)
--- dibujoP :: Dibujo Escher -> Dibujo Escher
--- dibujoP p = undefined 
-
--- Para que sera esto ?????
--- -- El dibujo S. (De S sale Q U W)
--- dibujoS :: Dibujo Escher -> Dibujo Escher
--- dibujoS s = undefined 
-
--- -- Esquina con nivel de detalle en base a la figura P.
--- esquina :: Int -> Dibujo Escher -> Dibujo Escher
--- esquina n p = undefined
-
--- -- Lado con nivel de detalle en base a la figura S.
--- lado :: Int -> Dibujo Escher -> Dibujo Escher
--- lado n p = undefined
-
--- Para que sera esto ????? que es un noneto ????
--- -- Por suerte no tenemos que poner el tipo!
--- noneto p q r s t u v w x = undefined
-
--- Para que sera esto ?????
--- -- El dibujo de Escher:
--- escher :: Int -> Escher -> Dibujo Escher
--- escher = undefined
-
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 -- El dibujo P. (De P sale R V X)
 dibujoP :: Dibujo Escher
 dibujoP = juntar 1 2 (apilar 1 2 (figCuadro Cruz) 
