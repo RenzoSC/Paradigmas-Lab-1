@@ -4,8 +4,8 @@ where
 --import Dibujos.Ejemplo (ejemploConf)
 import Dibujos.Feo (feoConf)
 import Dibujos.Grilla (grillaConf)
-
 import Dibujos.Escher (escherConf)
+import Dibujos.Sierpinski (sierpinskiConf)
 
 --import Dibujos.Cuadrados(cuadConf)
 import FloatingPic (Conf (..))
@@ -18,7 +18,7 @@ import InterpSVG (ConfSVG, initialSVG', simpleSVG)
 
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
-configs = [feoConf, grillaConf, escherConf] --[ejemploConf, feoConf,cuadConf 3]
+configs = [feoConf, grillaConf, escherConf, sierpinskiConf] --[ejemploConf, feoConf,cuadConf 3]
 
 configsH :: [ConfH]
 configsH = map (\(Conf n p _) -> simpleHaha n p) configs
