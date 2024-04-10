@@ -108,6 +108,10 @@ esquina n = comp n rotar dibujoP
 lado :: Int -> Dibujo Escher
 lado n = comp n rotar dibujoS
 
+noneto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
+noneto p q r s t u v w x = apilar 3 7 (juntar 3 7 p (juntar 4 3 q r)) 
+    (apilar 4 3 (juntar 3 7 s (juntar 4 3 t u)) (juntar 3 7 v (juntar 4 3 w x)))
+
 -- -- Impresion de Escher:
 
 row :: [Dibujo a] -> Dibujo a
@@ -125,9 +129,20 @@ grilla = column . map row
 
 testAll :: Dibujo Escher
 testAll = grilla [
-    [esquina 0, lado 0, esquina 3],[lado 1, centroT, lado 3],[esquina 1, lado 2, esquina 2]
+    [noneto (esquina 0) (lado 0) (esquina 3) (lado 1) centroT (lado 3) (esquina 1) (lado 2) (esquina 2)]
     ]
 
+-- testAll = grilla [
+--     [esquina 0, lado 0, esquina 3],
+--     [lado 1, centroT, lado 3],
+--     [esquina 1, lado 2, esquina 2]
+--     ]   --------> versión salchi 
+
+-- testAll = grilla [
+--     [juntar 3 7 (esquina 0) (juntar 4 3 (lado 0) (esquina 3))],
+--     [juntar 3 7 (lado 1) (juntar 4 3 centroT (lado 3))],
+--     [juntar 3 7 (esquina 1) (juntar 4 3 (lado 2) (esquina 2))]
+--     ]            ---> bien distribuido horizontalmente
 
 escherConf :: Conf
 escherConf = Conf {
