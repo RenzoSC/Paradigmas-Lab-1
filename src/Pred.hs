@@ -19,6 +19,7 @@ anyDib p = foldDib p id id id (\_ _ a b -> a||b) (\_ _ a b -> a||b) (||)
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred  a -> Dibujo a -> Bool
 allDib p = foldDib p id id id (\_ _ a b -> a&&b) (\_ _ a b -> a&&b) (&&)
+
 -- Los dos predicados se cumplen para el elemento recibido.
 andP :: Pred a -> Pred a -> a-> Bool
 andP pa pb dib = pa dib && pb dib
