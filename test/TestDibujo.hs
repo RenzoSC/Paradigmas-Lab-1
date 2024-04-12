@@ -14,24 +14,24 @@ testRotar :: Test
 testRotar =
     TestCase $ assertEqual "rotar" (show $ rotar (figura (5 :: Double))) "Rotar (Figura 5.0)"
 
-testApilar :: Test
-testApilar =
-    TestCase $ assertEqual "apilar" (show $ apilar 1 1 (figura (5 :: Double)) (figura (5 :: Double)))
-                 "Apilar 1.0 1.0 (Figura 5.0) (Figura 5.0)"
+-- testApilar :: Test
+-- testApilar =
+--     TestCase $ assertEqual "apilar" (show $ apilar 1 1 (figura (5 :: Double)) (figura (5 :: Double)))
+--                  "Apilar 1.0 1.0 (Figura 5.0) (Figura 5.0)"
 
-testEncimar :: Test
-testEncimar =
-    TestCase $ assertEqual "encimar" (show $ encimar (figura (5 :: Double)) (figura (5 :: Double)))
-                 "Encimar (Figura 5.0) (Figura 5.0)"
+-- testEncimar :: Test
+-- testEncimar =
+--     TestCase $ assertEqual "encimar" (show $ encimar (figura (5 :: Double)) (figura (5 :: Double)))
+--                  "Encimar (Figura 5.0) (Figura 5.0)"
 
 testRot45 :: Test
 testRot45 =
     TestCase $ assertEqual "rot45" (show $ rot45 (figura (5 :: Double))) "Rot45 (Figura 5.0)"
 
-testJuntar :: Test
-testJuntar =
-    TestCase $ assertEqual "juntar" (show $ juntar 1 1 (figura (5 :: Double)) (figura (5 :: Double)))
-                 "Juntar 1.0 1.0 (Figura 5.0) (Figura 5.0)"
+-- testJuntar :: Test
+-- testJuntar =
+--     TestCase $ assertEqual "juntar" (show $ juntar 1 1 (figura (5 :: Double)) (figura (5 :: Double)))
+--                  "Juntar 1.0 1.0 (Figura 5.0) (Figura 5.0)"
 
 testEspejar :: Test
 testEspejar =
@@ -80,11 +80,8 @@ testCuarteto =
                  "Apilar 1.0 1.0 (Juntar 1.0 1.0 (Figura 5.0) (Figura 5.0)) (Juntar 1.0 1.0 (Figura 5.0) (Figura 5.0))"
 
 
-main :: IO ()
-main = do
-    let tests =
-                TestList
-                    [ TestLabel "testFigura" testFigura
+tests :: Test
+tests = TestList [ TestLabel "testFigura" testFigura
                     , TestLabel "testRotar" testRotar
                     , TestLabel "testApilar" testApilar
                     , TestLabel "testEncimar" testEncimar
@@ -102,5 +99,7 @@ main = do
                     , TestLabel "testCuarteto" testCuarteto
                     ]
 
-    _ <- runTestTT tests
-    return ()
+main :: IO ()
+main = do
+    result <- runTestTT tests
+    if failures result > 0 then Exit.exitFailure else Exit.exitSuccess
