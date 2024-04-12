@@ -3,68 +3,79 @@ module Dibujos.Escher (
     escherConf
 )where
 
-import Dibujo (Dibujo, figura, juntar, apilar, rot45, rotar, encimar, espejar)
-import FloatingPic(Conf(..), Output, half, zero)
+import Dibujo (Dibujo, figura, juntar, apilar, rotar, encimar, espejar, rot45, cuarteto)
+import FloatingPic(Conf(..), Output)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
-import Graphics.Gloss ( Picture, blue, red, color, line, pictures )
+import Graphics.Gloss ( Picture, blue, color, line, violet, withAlpha )
+
 
 -- Les ponemos colorcitos para que no sea _tan_ feo
-data Color = Azul | Rojo
+data Color = Azul | Violeta | Transparente
     deriving (Show, Eq)
 
-data BasicaSinColor = Rectangulo | Cruz | Triangulo | Efe
+data BasicaSinColor = Rectangulo | Triangulo
     deriving (Show, Eq)
-
-type Basica = (BasicaSinColor, Color)
 
 colorear :: Color -> Picture -> Picture
 colorear Azul = color blue
-colorear Rojo = color red
+colorear Transparente = color (withAlpha 0 blue)
+colorear Violeta = color violet
+
 
 interpBasicaSinColor :: Output BasicaSinColor
-interpBasicaSinColor Triangulo x y w = line $ map (x V.+) [(0,0), y V.+ half w, w, (0,0)]
+interpBasicaSinColor Rectangulo x y w = line [x, x V.+ y, x V.+ y V.+ w, x V.+ w, x]
+interpBasicaSinColor Triangulo x y w = line $ map (x V.+) [(0,0), y, w, (0,0)]
 
+-- -- Coloreo de Escher:
+-- Tipo de Escher
+type Escher = (BasicaSinColor, Color)
 
-interpBas :: Output Basica
+interpBas :: Output Escher
 interpBas (b, c) x y w = colorear c $ interpBasicaSinColor b x y w
 
--- Diferentes tests para ver que estén bien las operaciones
-figRoja :: BasicaSinColor -> Dibujo Basica
-figRoja b = figura (b, Rojo)
 
-figAzul :: BasicaSinColor -> Dibujo Basica
+figAzul :: BasicaSinColor -> Dibujo Escher
 figAzul b = figura (b, Azul)
 
--- Debería mostrar un rectángulo azul arriba de otro rojo,
--- conteniendo toda la grilla dentro
-apilados :: BasicaSinColor -> Dibujo Basica
-apilados b = apilar 1 1 (rotar(apilar 1 1 (figAzul Triangulo) (figAzul Triangulo))) (rotar(juntar 1 1 (figAzul Triangulo) (figAzul Triangulo)))
 
--- -- Supongamos que eligen.
--- type Escher = Bool
+figTransparente :: BasicaSinColor -> Dibujo Escher
+figTransparente b = figura (b, Transparente)
 
--- -- El dibujo u.
--- dibujoU :: Dibujo Escher -> Dibujo Escher
--- dibujoU p = undefined 
+-- -- Armado de Escher:
 
--- -- El dibujo t.
--- dibujoT :: Dibujo Escher -> Dibujo Escher
--- dibujoT p = undefined 
+triangulo2 :: Dibujo Escher
+triangulo2 = espejar (rot45 (figAzul Triangulo))
 
--- -- Esquina con nivel de detalle en base a la figura p.
--- esquina :: Int -> Dibujo Escher -> Dibujo Escher
--- esquina n p = undefined
+triangulo3 :: Dibujo Escher
+triangulo3 = rotar (rotar (rotar triangulo2))
 
--- -- Lado con nivel de detalle.
--- lado :: Int -> Dibujo Escher -> Dibujo Escher
--- lado n p = undefined
+dibujoU:: Dibujo Escher
+dibujoU = encimar (encimar triangulo2 (rotar triangulo2)) (encimar (rotar (rotar triangulo2)) (rotar (rotar (rotar triangulo2))) )
 
--- -- Por suerte no tenemos que poner el tipo!
--- noneto p q r s t u v w x = undefined
+dibujoT:: Dibujo Escher
+dibujoT = encimar (figAzul Triangulo) (encimar triangulo2 triangulo3)
 
--- -- El dibujo de Escher:
--- escher :: Int -> Escher -> Dibujo Escher
--- escher = undefined
+
+lado:: Int -> Dibujo Escher
+lado 1 = cuarteto (figTransparente Rectangulo) (figTransparente Rectangulo) (rotar dibujoT) dibujoT
+lado 2 = cuarteto (lado 1) (lado 1) (rotar dibujoT) dibujoT
+lado n = cuarteto (lado (n-1)) (lado (n-1)) (rotar dibujoT) dibujoT
+
+esquina :: Int -> Dibujo Escher
+esquina 1 = cuarteto (figTransparente Rectangulo) (figTransparente Rectangulo) (figTransparente Rectangulo) dibujoU
+esquina 2 = cuarteto (esquina 1) (lado 1) (rotar (lado 1)) dibujoU
+esquina n = cuarteto (esquina (n-1)) (lado (n-1)) (rotar (lado (n-1))) dibujoU
+
+noneto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
+noneto p q r s t u v w x = apilar 1 2 (juntar 1 2 p (juntar 1 1 q r)) 
+    (apilar 1 1 (juntar 1 2 s (juntar 1 1 t u)) (juntar 1 2 v (juntar 1 1 w x)))
+
+escher :: Int -> Dibujo Escher
+escher n = noneto (esquina n) (lado n) (rotar (rotar (rotar (esquina n))))
+    (rotar (lado n)) dibujoU (rotar (rotar (rotar (lado n))))
+    (rotar (esquina n)) (rotar (rotar (lado n))) (rotar (rotar (esquina n)))
+
+-- -- Impresion de Escher:
 
 row :: [Dibujo a] -> Dibujo a
 row [] = error "row: no puede ser vacío"
@@ -79,11 +90,10 @@ column (d:ds) = apilar 1 (fromIntegral $ length ds) d (column ds)
 grilla :: [[Dibujo a]] -> Dibujo a
 grilla = column . map row
 
-testAll :: Dibujo Basica
+testAll :: Dibujo Escher
 testAll = grilla [
-    [apilados Trianguloxd] [apilados Triangulo] [apilados Triangulo] [apilados Triangulo]
+    [escher 2]
     ]
-
 
 escherConf :: Conf
 escherConf = Conf {
