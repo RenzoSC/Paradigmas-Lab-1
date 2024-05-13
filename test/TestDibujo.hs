@@ -1,6 +1,7 @@
 module Main (main) where
 
 import Test.HUnit
+import qualified System.Exit as Exit
 
 import Dibujo
 
